@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="styles.css">
+        <title>MATH CODE THING</title>
+    </head>
+</head>
+<body>
+
+<h1>Ya like math?</h1>
+<div class="container">
+    <label for="level">Select Difficulty:</label>
+    <select id="level">
+        <option value="1">Easy (Multiplication)</option>
+        <option value="2">Medium (Trigonometric Functions)</option>
+        <option value="3">Hard (Division and Complex Operations)</option>
+    </select>
+    <br><br>
+    <button onclick="generateQuestion()">Try your luck!</button>
+
+    <div class="question-container" id="question-container"></div>
+    <div class="options-container" id="options-container"></div>
+</div>
+
+<script>
+    function generateQuestion() {
+        const level = document.getElementById("level").value;
+        let question = "";
+        let correctAnswer = 0;
+        let options = [];
+
+        // Clear previous options and question
+        document.getElementById("question-container").innerHTML = "";
+        document.getElementById("options-container").innerHTML = "";
+
+        switch (level) {
+            case "1":
+                // Easy level: Multiplication
+                const num1 = Math.floor(Math.random() * 10) + 1; // Random number between 1 and 10
+                const num2 = Math.floor(Math.random() * 10) + 1; // Random number between 1 and 10
+
+                question = `${num1} * ${num2} = ?`; // Multiplication question
+                correctAnswer = num1 * num2; // Correct answer is the product of num1 and num2
+
+                options = generateOptions(correctAnswer); // Generate options based on the correct answer
+                break;
+
+            case "2":
+                // Medium level: Trigonometric functions (unit circle values)
+                const angles = [0, 90, 180, 270];
+                const trigFunctions = [Math.sin, Math.cos, Math.tan];
+
+                const angle = angles[Math.floor(Math.random() * angles.length)];
+                const trigFunction = trigFunctions[Math.floor(Math.random() * trigFunctions.length)];
+
+                // Skip invalid tan angles
+                if(trigFunction === Math.tan) {
+                    if (angle === 90 || angle === 270) {
+                        return generateQuestion();
+                }
+            }
+
+                correctAnswer = trigFunction((angle * Math.PI) / 180); // Convert degrees to radians
+                correctAnswer = parseFloat(correctAnswer.toFixed(2)); // Convert to a number for consistency
+
+                const functionName = trigFunction === Math.sin
+                    ? "sin"
+                    : trigFunction === Math.cos
+                    ? "cos"
+                    : "tan";
+
+                question = `What is the value of ${functionName}(${angle}°)?`;
+
+                options = generateOptions(correctAnswer);
+                break;
+
+            case "3":
+                // Hard mode: Numerical integration and differentiation
+                const isDerivative = Math.random() < 0.5;
+                
+                if (isDerivative) {
+                    const coeff = Math.floor(Math.random() * 10) + 1; // Random coefficient
+                    const exponent = Math.floor(Math.random() * 5) + 2; // Random exponent (at least 2)
+
+                    question = `What is the first derivative of ${coeff}x^${exponent}?`;
+
+                    // Calculate correct answer
+                    const newCoeff = coeff * exponent;
+                    const newExponent = exponent - 1;
+                    correctAnswer = `${newCoeff}x^${newExponent}`; // e.g., "12x^2"
+
+                    options = generateOptionsForDerivatives(correctAnswer, newCoeff, newExponent);
+
+                } else {
+                    const a = Math.floor(Math.random() * 5) + 1; // Random lower limit
+                    const b = a + Math.floor(Math.random() * 5) + 1; // Random upper limit
+                    const base = Math.floor(Math.random() * 10) + 1; // Random base
+
+                    question = `What is the definite integral of ${base} from ${a} to ${b}?`;
+
+                    // Correct answer for definite integral: base * (b - a)
+                    correctAnswer = base * (b - a);
+
+                    options = generateOptionsForIntegration(correctAnswer);
+                }
+                    break;
+
+            default:
+                question = "Invalid level!";
+        }
+
+        // Display question
+        document.getElementById("question-container").innerHTML = `
+            <p><strong>Question:</strong> ${question}</p>`;
+
+        // Display the multiple choice options
+        options.forEach((option) => {
+            const optionButton = document.createElement("div");
+            optionButton.classList.add("option");
+            optionButton.innerHTML = option;
+            optionButton.onclick = () => checkAnswer(option, correctAnswer, optionButton);
+            document.getElementById("options-container").appendChild(optionButton);
+        });
+    }
+
+    function generateOptions(correctAnswer) {
+        const options = [correctAnswer];
+
+        // Generate 3 random incorrect answers
+        while (options.length < 4) {
+            const randomOption = correctAnswer + Math.floor(Math.random() * 20) - 10;
+            if (!options.includes(randomOption)) {
+                options.push(randomOption);
+            }
+        }
+
+        // Shuffle the options array
+        return options.sort(() => Math.random() - 0.5);
+    }
+
+    function checkAnswer(selectedOption, correctAnswer, optionElement) {
+        const allOptions = document.querySelectorAll(".option");
+        allOptions.forEach((option) => (option.style.pointerEvents = "none"));
+
+        // Check for correct/incorrect and update styles
+        if (parseFloat(selectedOption) === parseFloat(correctAnswer)) {
+            optionElement.classList.add("correct");
+        } else {
+            optionElement.classList.add("incorrect");
+        }
+    }
+
+    function generateOptionsForDerivatives(correctAnswer, coeff, exponent) {
+    const options = [correctAnswer];
+
+    // Generate 3 plausible incorrect answers
+    while (options.length < 4) {
+        const incorrectCoeff = coeff + (Math.random() < 0.5 ? -1 : 1);
+        const incorrectExponent = exponent + (Math.random() < 0.5 ? -1 : 1);
+        const incorrectAnswer = `${incorrectCoeff}x^${incorrectExponent}`;
+
+        if (!options.includes(incorrectAnswer)) {
+            options.push(incorrectAnswer);
+        }
+    }
+
+    return options.sort(() => Math.random() - 0.5); // Shuffle options
+}
+
+function generateOptionsForIntegration(correctAnswer) {
+    const options = [correctAnswer];
+
+    // Generate 3 plausible incorrect answers
+    while (options.length < 4) {
+        const offset = Math.random() * 5 - 2.5; // Random offset in range [-2.5, 2.5]
+        const incorrectAnswer = correctAnswer + offset;
+
+        // Round to 2 decimal places and ensure no duplicates
+        const roundedAnswer = parseFloat(incorrectAnswer.toFixed(2));
+        if (!options.includes(roundedAnswer)) {
+            options.push(roundedAnswer);
+        }
+    }
+
+    return options.sort(() => Math.random() - 0.5); // Shuffle options
+}
+
+</script>
+
+</body>
+</html>

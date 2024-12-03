@@ -1,0 +1,98 @@
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    text-align: center;
+    padding: 20px;
+    background-color: #f4f8fb; /* Light blue for a calm theme */
+    color: #333; /* Neutral text color for readability */
+}
+
+h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: #0074cc; /* Bright blue for emphasis */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.container {
+    margin: 20px auto;
+    padding: 20px;
+    width: 60%;
+    border: 2px solid #0074cc; /* Match with header */
+    border-radius: 10px;
+    background-color: #ffffff;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+select {
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #0074cc;
+    border-radius: 4px;
+    background-color: #ffffff;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+select:hover {
+    border-color: #005fa3;
+}
+
+button {
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    background-color: #0074cc;
+    color: white;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: 0.3s;
+}
+
+button:hover {
+    background-color: #005fa3;
+}
+
+.question-container {
+    margin-top: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+.options-container {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.option {
+    padding: 12px 20px;
+    background-color: #eaf3fb; /* Light blue option background */
+    color: #333;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    border: 2px solid #0074cc;
+    transition: 0.3s;
+}
+
+.option:hover {
+    background-color: #d4e7f7;
+    border-color: #005fa3;
+}
+
+.option.correct {
+    background-color: #28a745; /* Green for correct */
+    color: white;
+    border-color: #1e7e34;
+}
+
+.option.incorrect {
+    background-color: #dc3545; /* Red for incorrect */
+    color: white;
+    border-color: #c82333;
+}
